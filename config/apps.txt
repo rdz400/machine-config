@@ -1,0 +1,36 @@
+# list of applications I should install whenever I reinstall windows
+# these names are not following any conventions other than them being lower case
+# some of these are utilities for which the installation is automated by scripts
+# elsewhere in this repo
+# concerning this file. Every line that does not begin with a hash tag should be
+# ignored (if I ever want to do something with this file programmatically)
+# empty lines have no meaning and are ignored as well
+# configuration for these files is not maintained in this list
+
+# Would be nice to check which ones are available with winget
+
+vscode
+todoist
+python
+onenote
+excel
+word
+powerpoint
+adobe acrobat
+ms access
+draw.io
+ms edge
+powershell
+windows terminal
+powertoys
+power bi desktop
+git
+postgresql
+pgadmin
+anki
+adobe digital editions
+db browser sqlite
+autohotkey
+obsidian
+docker
+ms onedrive

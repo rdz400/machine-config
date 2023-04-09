@@ -1,0 +1,10 @@
+# this file contains all custom environment variables I use (generally)
+SNIPPETS: '%USERPROFILE%\Snippets'
+REPOS: '%USERPROFILE%\repos'
+PYTHONPATH: '%USERPROFILE%\OneDrive\home\coding\python-scripts;'
+PG_CONN: 'postgresql+psycopg2://postgres:%PG_SC%@localhost:5433/mdb'
+PG_TEST: 'postgresql+psycopg2://postgres:%PG_SC%@localhost:5433/example'
+PATH: >  # only relevant bits
+  '%USERPROFILE%\scripts\;'
+  '%USERPROFILE%\AppData\Local\Programs\Microsoft VS Code\bin'
+  'C:\Program Files\PostgreSQL\15\bin'
