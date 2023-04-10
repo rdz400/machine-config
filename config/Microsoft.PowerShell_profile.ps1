@@ -6,7 +6,9 @@ $Env:rd_jp = "$Env:rd_coding\jupyter-notebooks"
 
 function c {
     # Make it easy to switch locations
-    param ([String]$Loc)
+    param ([ValidateSet(
+        "p", "a", "r", "x", "s", "j", "appdata", "dl")]
+           [String]$Loc)
 
     switch ($Loc) {
         "p" { Set-Location $Env:OneDrive\home\01-projects }
@@ -14,6 +16,8 @@ function c {
         "r" { Set-Location $Env:OneDrive\home\03-resources }
         "x" { Set-Location $Env:OneDrive\home\05-archive }
         "s" { Set-Location $Env:SNIPPETS }
+        "appdata" { Set-Location $Env:APPDATA }
+        "dl" { Set-Location $Env:OneDrive\home\06-datalake}
         "j" { Set-Location $Env:rd_jp }
         Default { Set-Location $Env:REPOS}
     }
