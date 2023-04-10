@@ -22,6 +22,15 @@ function c {
 function pjp { jupyter lab $Env:rd_jp }
 function jp { jupyter lab . }
 
+function Backup-RConfig {
+    $cur_loc = Get-Location
+    Set-Location $env:REPOS\app-config
+    python -m config_manager.main
+    Set-Location $cur_loc
+}
+
+Set-Alias -Name bus -Value Backup-RConfig
+
 function lgrep {
     param ([String]$Path, [String]$Needle)
     Get-ChildItem $Path -Recurse -File | Where-Object {$(Get-Content $_) -match $Needle}
