@@ -3,11 +3,13 @@ Write-Host 'Welcome to PowerShell my friend.'
 $Env:rd_coding = "$Env:OneDrive\home\07-coding"
 $Env:rd_jp = "$Env:rd_coding\jupyter-notebooks"
 
+# Enable pg backup function
+. "$Env:REPOS\fin-sql-execution\bu_db\make-bu.ps1"
 
 function c {
     # Make it easy to switch locations
     param ([ValidateSet(
-        "p", "a", "r", "x", "s", "j", "appdata", "dl")]
+        "p", "a", "r", "x", "s", "j", "appdata", "d", "h", "dl")]
            [String]$Loc)
 
     switch ($Loc) {
@@ -16,7 +18,9 @@ function c {
         "r" { Set-Location $Env:OneDrive\home\03-resources }
         "x" { Set-Location $Env:OneDrive\home\05-archive }
         "s" { Set-Location $Env:SNIPPETS }
+        "h" { Set-Location $HOME }
         "appdata" { Set-Location $Env:APPDATA }
+        "d" { Set-Location $Env:WDL}
         "dl" { Set-Location $Env:OneDrive\home\06-datalake}
         "j" { Set-Location $Env:rd_jp }
         Default { Set-Location $Env:REPOS}
@@ -25,6 +29,7 @@ function c {
 
 function pjp { jupyter lab $Env:rd_jp }
 function jp { jupyter lab . }
+function st { Start-Process . }  # open current folder in explorer
 
 function Backup-RConfig {
     $cur_loc = Get-Location
@@ -86,4 +91,39 @@ function prompt {
 function touch {
     param ([Parameter(Mandatory=$true)][String]$FileName)
     $null > $FileName
+}
+
+
+##################
+## Extract metadata
+###################
+
+
+function Get-MultiTags {
+    param([Parameter(Mandatory=$true, ValueFromPipeline=$true)][System.IO.FileSystemInfo]$File)
+
+    Process{
+        Get-WordTags $File
+    }
+}
+function Get-WordTags {
+    param([Parameter(Mandatory=$True)][System.IO.FileSystemInfo]$File)
+
+
+    $pathname = $File.DirectoryName 
+    $filename = $File.Name
+
+    try{
+        $shellobj = New-Object -ComObject Shell.Application 
+        $folderobj = $shellobj.namespace($pathname) 
+        $fileobj = $folderobj.parsename($filename) 
+        $tags = $folderobj.getDetailsOf($fileobj, 18)  # 18 is gelijk aan tags
+        $tags_collection = $tags -split "; "
+        $File | Add-Member -MemberType NoteProperty -Name 'Tags' -Value $tags_collection
+        return $File
+    }finally{
+        if($shellobj){
+            [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$shellobj) | out-null
+        }
+    }
 }
