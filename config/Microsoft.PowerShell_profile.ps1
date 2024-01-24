@@ -27,6 +27,8 @@ function c {
     }
 }
 
+function cc { code -n . }  # open current folder in vscode
+
 function pjp { jupyter lab $Env:rd_jp }
 function jp { jupyter lab . }
 function st { Start-Process . }  # open current folder in explorer
@@ -50,6 +52,16 @@ function lgrep {
         # Write-Host "MyParameter was not passed."
     }
 }
+
+function touch {
+    param ([Parameter(Mandatory=$true)][String]$FileName)
+    $null > $FileName
+}
+
+
+##################
+## Prompt
+###################
 
 function stylize {
     param ([string]$Text)
@@ -87,13 +99,6 @@ function prompt {
     stylize $full_prompt
 }
 
-
-function touch {
-    param ([Parameter(Mandatory=$true)][String]$FileName)
-    $null > $FileName
-}
-
-
 ##################
 ## Extract metadata
 ###################
@@ -126,4 +131,42 @@ function Get-WordTags {
             [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$shellobj) | out-null
         }
     }
+}
+
+# Function to get a lot of details about subfolders
+function subdetails {
+    
+    Get-ChildItem -Directory |
+        Select-Object Name,
+            @{
+                name='SubfolderCount'
+                expr={(gci $_ -Recurse -Directory).Count}
+            },
+            @{
+                name='FileCount'
+                expr={(gci $_ -Recurse -File).Count}
+            },
+            @{
+                name='Size'
+                expr={(gci $_ -Recurse -File | measure -Property length -Sum).Sum / 1MB}
+            },
+            @{
+                name='Extensions'
+                expr={@(gci $_ -Recurse -File | Group-Object -Property Extension -NoElement).Name -join ", "}
+            } |
+        Sort-Object -Property Size
+}
+
+function pypr {
+    touch pyproject.toml
+    $text=@"
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+"@
+    Set-Content pyproject.toml $text
+    touch requirements-dev.txt
+    mkdir src
+    mkdir tests
+    touch README.md
 }
